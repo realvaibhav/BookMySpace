@@ -1,0 +1,119 @@
+    {% extends "base_layout.html" %}
+    {% load static %}
+
+
+        {% block title %}Booking History{% endblock %}
+
+                            {% block navbar %}
+                            <a href="pl-bh">Booking History</a>
+                            <a href="vp">Change Password</a>
+                            <a href="pl-up">Update Parking Lot Details</a>
+                            <a href="up">Update Profile</a>
+                            <a href="../">Logout</a>
+                                {% endblock %}
+
+                {% block content %}
+                <div style="display: flex; justify-content: center; width: 100%">
+                    <img src="{{ pl_data.pl_image.url }}" alt="" style="width: 400px; ">
+                </div>
+                <div style="display: flex; flex-direction: row; padding: 10px; margin: 10px 0px 10px 0px;">
+                    <div style="display: flex; flex-direction: column; padding: 20px; z-index: 1; box-shadow: rgb(172, 172, 172) 1px 1px 5px; max-width: 300px; margin: 10px">
+                        <p style="font-size: 16px; text-align: left; color: #344050; font-weight: bold;">Total Earning<br>
+                            <span style="color: green; font-size: 32px;">&#8377;{{ total_earning }}</span></p>
+                        
+                    </div>
+                    <div style="display: flex; flex-direction: column; padding: 20px; z-index: 1; box-shadow: rgb(172, 172, 172) 1px 1px 5px; max-width: 200px; margin: 10px">
+                        <p style="font-size: 16px; text-align: left; color: #344050; font-weight: bold;">Total bookings<br>
+                            <span style="color: green; font-size: 32px;">{{ total_bookings }}</span></p>
+                        
+                    </div>
+                    <div style="display: flex; flex-direction: row; padding: 20px; z-index: 1; box-shadow: rgb(172, 172, 172) 1px 1px 5px; justify-content: center; margin: 10px">
+                        <p style="font-size: 16px; text-align: left; color: #344050; font-weight: bold;">Parking lot status<br>
+                            <span style="color: #75d56a; font-size: 14px;">Available slots   {{ available_slots }}</span><br>
+                            <span style="color: #acacac; font-size: 14px;">Booked slots   {{ pl_data.booked_slot_count }}</span>
+                        </p>
+                            <div id="container" style="width: 300px;">
+                                <canvas id="pie-chart"></canvas>
+                
+                            </div>
+                    </div>
+                </div>
+                
+                <table style="color: black;">
+                    <tbody >
+                            <tr style="margin-bottom: 5px;">
+                                <td style="border: 1px solid rgb(172, 172, 172); box-shadow: rgb(172, 172, 172) 1px 1px 5px; border-radius: 5px; padding: 10px;">
+                                    
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td style="display: flex; flex-direction: column;">
+                                                    <p style="font-size: 16px; font-weight: bold; float: left">Parking lot Name: {{ pl_data.user_id.name }}</p>
+                                                    <p style="font-size: 16px; font-weight: bold; float: left">Manager: {{ pl_data.manager_name }}</p>
+                                                </td>
+                                                <td>
+                                                    <p style="font-size: 14px; float: right">Parking lot Operation Time: {{ pl_data.opening_time }} - {{ pl_data.closing_time }}</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 400px;">
+                                                    <p style="font-size: 14px; text-align: left; word-wrap: normal; float: left">Booking Price: &#8377; {{ pl_data.booking_price }}</p>
+                                                </td>
+                                                <td>
+                                                    <p style="font-size: 16px; text-align:right; float: right">Address: {{ pl_data.address }}, {{ pl_data.city }}</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 400px;">
+                                                    <p style="font-size: 14px; text-align: left; word-wrap: normal; float: left; color: grey">{{ pl_data.email }}</p>
+                                                </td>
+                                                <td>
+                                                    <p style="font-size: 16px; text-align:right; float: right; color: grey">{{ pl_data.user_id.phonenumber }}</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="display: flex; flex-direction: column;">
+                                                    <p style="font-size: 16px; font-weight: bold; float: left">{{ pl_data.total_slot_count }} slots</p>
+                                                    
+                                                </td>
+                                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                </td>
+                            </tr>
+
+                            
+                        
+                    </tbody>
+                </table>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+              <script>
+            
+                var config = {
+                  type: 'doughnut',
+                  data: {
+                    datasets: [{
+                      data: [ {{ pl_data.booked_slot_count|safe }}, {{ available_slots|safe }} ],
+                      backgroundColor: [
+                        '#acacac', '#75d56a'
+                      ],
+                      label: 'Slots Count'
+                    }],
+                    labels: [
+                        'Booked slots', 'Available slots'
+                    ]
+                  },
+                  options: {
+                    responsive: true
+                  }
+                };
+            
+                window.onload = function() {
+                  var ctx = document.getElementById('pie-chart').getContext('2d');
+                  window.myPie = new Chart(ctx, config);
+                };
+            
+              </script>
+                {% endblock %}
