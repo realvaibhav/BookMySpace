@@ -34,7 +34,7 @@ def fav_pl_view(get):
     query_set = bms_cu_faviorate.objects.filter(user_id = cache.get('loggedin_user_id'))
     if query_set.count() == 0:
         context = {
-            "no_data_message" : "You have no faviorates"
+            "no_data_message" : "You have no Favourites"
         }
     else:
         context = {
